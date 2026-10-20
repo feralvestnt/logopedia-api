@@ -3,21 +3,17 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const config = require("./server/config/config");
-const connectDB = require("./db");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (error) {
-    next(error);
-  }
+
+app.get("/health", (req, res) => {
+  res.json({ status: "ok" });
 });
 
+app.use("/auth", require("./server/routes/authentication"));
 app.use("/lessons", require("./server/routes/lessons"));
 
 app.use((req, res) => {

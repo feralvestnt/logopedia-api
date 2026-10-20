@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const { listLessons } = require("../controller/lessons");
+const requireAuth = require("../middleware/requireAuth");
 
-router.get("/", listLessons);
+router.get("/", requireAuth, listLessons);
 
 module.exports = router;

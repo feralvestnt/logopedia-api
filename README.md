@@ -11,10 +11,15 @@ provides `GET /lessons`, returning lessons ordered by scheduled date.
 ## Run locally
 
 1. Install dependencies with `npm install`.
-2. Copy `.env.example` to `.env` and set `MONGODB_URI`.
-3. Start the API with `npm run dev` (or `npm start`).
+2. Start both the frontend and API from the frontend repository with `npm run dev`.
 
-The API listens on port `3002` by default. Set `PORT` to use another port.
+The API listens on port `3002` by default. The demo login is **adm** / **adm**.
+No database is required for login or the empty lesson board. To use MongoDB,
+set `USE_MONGODB=true` and `MONGODB_URI` in `.env`.
+
+The mock login creates temporary in-memory sessions and is only for local
+development; restart the API to clear them. Do not use it as production
+authentication.
 
 ## Lesson document
 
