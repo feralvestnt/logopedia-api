@@ -1,24 +1,25 @@
 const mongoose = require("mongoose");
 
-//const MONGO_URI = "mongodb+srv://fernandohalves0:NoraunIoOe4kgSmY@sport-score-free.knhchij.mongodb.net/sport-score?retryWrites=true&w=majority&appName=sport-score-free";
-const MONGO_URI = "mongodb+srv://fernandohalves0_db_user:dJ5gYTvuZg0quMLa@cluster-restaurantes-br.pwbxuyu.mongodb.net/restaurante-regina?retryWrites=true&w=majority&appName=restaurantes-brasil";
+let connectionPromise;
 
-//const MONGO_URI = process.env.MONGO_URI;
-
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
-}
-async function dbConnect() {
-  if (cached.conn) return cached.conn;
-
-  if (!cached.promise) {
-    cached.promise = mongoose.connect(MONGO_URI);
+async function connectDB() {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    throw new Error("MONGODB_URI must be set before connecting to MongoDB.");
   }
 
-  cached.conn = await cached.promise;
-  return cached.conn;
+  if (mongoose.connection.readyState === 1) {
+    return mongoose.connection;
+  }
+
+  if (!connectionPromise) {
+    connectionPromise = mongoose.connect(uri).catch((error) => {
+      connectionPromise = null;
+      throw error;
+    });
+  }
+
+  return connectionPromise;
 }
 
-module.exports = dbConnect;
+module.exports = connectDB;
